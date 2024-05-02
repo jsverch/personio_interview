@@ -65,13 +65,6 @@ resource "aws_security_group" "k8s_sg" {
   name   = "K8S Ports"
   vpc_id = aws_vpc.cluster_vpc.id
 
-#  ingress {
-#    from_port   = 80
-#    to_port     = 80
-#    protocol    = "tcp"
-#    cidr_blocks = ["0.0.0.0/0"]
-#  }
-
   # k8s api
   ingress {
     from_port   = 6443
