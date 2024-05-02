@@ -2,24 +2,34 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: demo-app-deployment
+  namespace: demo-app
   labels:
-    app: demo-app
+    app: demo-app-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: demo-app
+      app: demo-app-deployment
   template:
     metadata:
       labels:
-        app: demo-app
+        app: demo-app-deployment
     spec:
       containers:
       - name: demo-app-deployment
+        env:
+        - name: HELLO
+          value: "Hello there"
         image: 403371617795.dkr.ecr.us-east-1.amazonaws.com/demo-app:latest
+        imagePullPolicy: Always
         resources:
           requests:
-            cpu: "100m"
-        imagePullPolicy: IfNotPresent
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         ports:
         - containerPort: 8080
+      imagePullSecrets:
+          - name: regcred
