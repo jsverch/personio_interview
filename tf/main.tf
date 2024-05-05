@@ -4,6 +4,9 @@ provider "aws" {
   secret_key = var.secret_key
 }
 
+# Start with a VPC and all the trimmings
+#   (subnets, igw, route tables and their associations)
+
 # For simplicity sake we'll use a whole /16
 resource "aws_vpc" "cluster_vpc" {
   cidr_block = "10.2.0.0/16"
@@ -114,6 +117,7 @@ resource "aws_security_group" "k8s_sg" {
   }
 }
 
+# random string for unique bucket name
 resource "random_string" "s3name" {
   length = 9
   special = false
@@ -169,9 +173,9 @@ resource "aws_instance" "ec2_instance_master" {
     delete_on_termination = true
     }
     tags = {
-        Name = "k8s_msr_1"
+        Name = "k8s-cluster-master-1"
     }
-    # Install script can be encoded into user data that will be exectured on ec2 startup
+    # Install script can be encoded into user data that will be executed on ec2 startup
     user_data_base64 = base64encode("${templatefile("scripts/install_master.sh", {
     access_key = var.access_key
     private_key = var.secret_key
@@ -201,9 +205,9 @@ resource "aws_instance" "ec2_instance_worker" {
     delete_on_termination = true
     }
     tags = {
-        Name = "k8s_wrk_${count.index + 1}"
+        Name = "k8s-cluster-worker-${count.index + 1}"
     }
-    # Install script can be encoded into user data that will be exectured on ec2 startup
+    # Install script can be encoded into user data that will be executed on ec2 startup
     user_data_base64 = base64encode("${templatefile("scripts/install_worker.sh", {
     access_key = var.access_key
     private_key = var.secret_key

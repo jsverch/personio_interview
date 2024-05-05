@@ -32,3 +32,4 @@ For the master it runs `kubeadm token create --print-join-command` and save the 
 For the worker(s) it downloads this join command and executes it.
 
 ## Future considerations for Prod
+- First of all, you
